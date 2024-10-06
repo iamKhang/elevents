@@ -1,4 +1,5 @@
 import React from 'react'
+import { Facebook, Instagram } from "lucide-react";
 const sections = [
     {
       title: "HỆ THỐNG CỬA HÀNG HADES",
@@ -44,7 +45,7 @@ const Footer = () => {
             <h6 className="font-bold uppercase cursor-pointer">
               {section.title}
             </h6>
-            <ul className="list-none p-0 hidden lg:block"> {/* Ẩn danh sách ở màn hình nhỏ, hiện danh sách ở màn hình vừa trở lên */}
+            <ul className="list-none p-0 hidden lg:block"> 
               {section.items.map((item, i) => (
                 <li key={i} className="py-1 text-gray-600 hover:text-black">
                   {item}
@@ -54,15 +55,14 @@ const Footer = () => {
           </div>
         ))}
 
-        {/* Cột thứ 4: Follow us on social media */}
+
         <div className="mb-4">
           <h6 className="font-bold uppercase">FOLLOW US ON SOCIAL MEDIA</h6>
           <div className="hidden lg:block">
           <div className="flex space-x-4 pt-2">
-            <FaFacebook className="hover:text-blue-600" size={24} />
-            <FaInstagram className="hover:text-pink-500" size={24} />
+            <Facebook className="hover:text-blue-600" size={24} />
+            <Instagram className="hover:text-pink-500" size={24} />
           </div>
-          {/* Thêm hình ảnh "ĐÃ THÔNG BÁO BỘ CÔNG THƯƠNG" */}
           <div className="pt-4">
             <a href="http://online.gov.vn/Home/WebDetails/78935">
               <img
@@ -84,4 +84,4 @@ const Footer = () => {
   )
 }
 
-export default Footer
+export default Footer  
