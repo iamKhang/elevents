@@ -59,8 +59,8 @@ const Footer = () => {
           <h6 className="font-bold uppercase">FOLLOW US ON SOCIAL MEDIA</h6>
           <div className="hidden lg:block">
           <div className="flex space-x-4 pt-2">
-            <FaFacebook className="hover:text-blue-600" size={24} />
-            <FaInstagram className="hover:text-pink-500" size={24} />
+            {/* <FaFacebook className="hover:text-blue-600" size={24} />
+            <FaInstagram className="hover:text-pink-500" size={24} /> */}
           </div>
           {/* Thêm hình ảnh "ĐÃ THÔNG BÁO BỘ CÔNG THƯƠNG" */}
           <div className="pt-4">
