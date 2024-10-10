@@ -2,15 +2,10 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import Image from "next/image"
+
 import { Menu, X, ShoppingCart, Search, ChevronLeft, ChevronRight } from "lucide-react"
 
-const carouselImages = [
-  "/images/image.png", // Đường dẫn tới ảnh đầu tiên
-  "/images/image1.png", // Đường dẫn tới ảnh thứ hai
-  "/placeholder.svg?height=500&width=1200&text=Featured+Items+1",
-  "/placeholder.svg?height=500&width=1200&text=Featured+Items+2",
-];
+
 
 
 export const Header = () => {  // Đã sửa cú pháp khai báo component
@@ -18,7 +13,7 @@ export const Header = () => {  // Đã sửa cú pháp khai báo component
   const [isMobile, setIsMobile] = useState(false)
   const [isSearchFormVisible, setIsSearchFormVisible] = useState(false)
   const [isCartVisible, setIsCartVisible] = useState(false)
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -39,13 +34,6 @@ export const Header = () => {  // Đã sửa cú pháp khai báo component
     setIsSearchFormVisible(false)
   }
 
-  const nextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % carouselImages.length)
-  }
-
-  const prevImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + carouselImages.length) % carouselImages.length)
-  }
 
   const menuItems = [
     "SHOP ALL",
@@ -196,32 +184,7 @@ export const Header = () => {  // Đã sửa cú pháp khai báo component
         </div>
       </div>
 
-      <div className="relative mt-[120px]">
-        <div className="overflow-hidden">
-          <Image
-            src={carouselImages[currentImageIndex]}
-            alt="Featured Items"
-            width={1200}
-            height={500}
-            className="w-full h-auto object-cover"
-          />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <h2 className="text-4xl font-bold text-white">FEATURED ITEMS</h2>
-          </div>
-        </div>
-        <button
-          onClick={prevImage}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 p-2 rounded-full"
-        >
-          <ChevronLeft className="h-6 w-6" />
-        </button>
-        <button
-          onClick={nextImage}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 p-2 rounded-full"
-        >
-          <ChevronRight className="h-6 w-6" />
-        </button>
-      </div>
+      
     </>
   )
 }
