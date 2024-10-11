@@ -1,6 +1,6 @@
 "use client";
 import Footer from "./components/footer";
-import Header from "./components/header_all";
+import { Header } from "./components/header";
 import Carousel from "./components/slide/Carousel";
 import ProductList  from "./components/productCard/list";
 

@@ -1,4 +1,3 @@
-"use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X, ShoppingCart, Search } from "lucide-react";
@@ -134,12 +133,45 @@ export const Header = () => {
         </div>
       </header>
 
+      {/* Mobile Menu Slide-in */}
+      <div
+        className={`fixed top-0 left-0 bottom-0 w-full max-w-xs bg-white z-50 transform transition-transform duration-700 ease-in-out ${
+          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        } shadow-lg overflow-y-auto`}
+        style={{ height: "100vh" }}
+      >
+        <div className="p-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-bold">Menu</h2>
+            <button
+              onClick={toggleMobileMenu}
+              aria-label="Close menu"
+              className="hover:text-gray-700 transition-transform transform hover:scale-110 ease-in-out duration-300"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+          <nav className="mt-6 space-y-4">
+            {menuItems.map((item, index) => (
+              <Link
+                key={index}
+                href={`/${item.toLowerCase().replace(" ", "-")}`}
+                className="block text-sm font-medium hover:text-gray-700 whitespace-nowrap transition-all duration-500 ease-in-out"
+                onClick={toggleMobileMenu}
+              >
+                {item}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </div>
+
       {/* Cart Slide-in */}
       <div
         className={`fixed top-0 right-0 bottom-0 ${
-          isMobile ? "w-full max-w-xs" : "w-full max-w-md" // Thay đổi max-w-lg thành max-w-md hoặc max-w-xs để nhỏ hơn
-        } bg-white z-50 transform transition-transform transition-opacity duration-700 ease-in-out ${
-          isCartVisible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+          isMobile ? "w-full max-w-xs" : "w-full max-w-md"
+        } bg-white z-50 transform transition-transform duration-700 ease-in-out ${
+          isCartVisible ? "translate-x-0" : "translate-x-full"
         } shadow-lg`}
       >
         <div className="p-6">
@@ -159,12 +191,13 @@ export const Header = () => {
               <h3 className="text-lg font-bold">TOTAL: 0đ</h3>
               <div className="mt-4 flex space-x-4">
                 <Link href="/cart">
-                  <button className="w-full bg-black text-white font-bold py-2 px-4 rounded-md hover:bg-gray-800 transition-colors duration-300">
+                  <button className="w-full bg-black text-white font-bold py-2 px-4 rounded-none hover:bg-white hover:text-black border-none transition-colors duration-300">
                     XEM GIỎ HÀNG
                   </button>
+
                 </Link>
                 <Link href="/cart">
-                  <button className="w-full bg-black text-white font-bold py-2 px-4 rounded-md hover:bg-gray-800 transition-colors duration-300">
+                  <button className="w-full bg-black text-white font-bold py-2 px-4 rounded-md border border-black hover:bg-white hover:text-black transition-colors duration-300">
                     THANH TOÁN
                   </button>
                 </Link>
@@ -177,9 +210,9 @@ export const Header = () => {
       {/* Search Slide-in */}
       <div
         className={`fixed top-0 right-0 bottom-0 ${
-          isMobile ? "w-full max-w-xs" : "w-full max-w-md" // Thay đổi max-w-lg thành max-w-md hoặc max-w-xs để nhỏ hơn
-        } bg-white z-50 transform transition-transform transition-opacity duration-700 ease-in-out ${
-          isSearchFormVisible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+          isMobile ? "w-full max-w-xs" : "w-full max-w-md"
+        } bg-white z-50 transform transition-transform duration-700 ease-in-out ${
+          isSearchFormVisible ? "translate-x-0" : "translate-x-full"
         } shadow-lg`}
       >
         <div className="p-6">
