@@ -20,11 +20,11 @@ const CartPage = () => {
           </div>
         </div>
 
-        {/* Main Content */}
+        {/* Nội dung chính */}
         <div className="flex justify-center items-center">
           <div className="w-full max-w-6xl">
             <div className="grid md:grid-cols-3 gap-8">
-              {/* Phần trái: thông tin giỏ hàng */}
+              {/* Phần bên trái: thông tin giỏ hàng */}
               <div className="md:col-span-2">
                 <h1 className="text-3xl font-bold mb-6 text-center">GIỎ HÀNG CỦA BẠN</h1>
                 <p className="mb-8 text-lg text-gray-700 text-center">Giỏ hàng của bạn đang trống</p>
@@ -37,7 +37,7 @@ const CartPage = () => {
                 </div>
               </div>
 
-              {/* Phần phải: thông tin đơn hàng */}
+              {/* Phần bên phải: thông tin đơn hàng */}
               <div className="border border-gray-200 p-6 rounded-lg shadow-md">
                 <h2 className="text-xl font-bold mb-6 text-center">Thông tin đơn hàng</h2>
                 <div className="border-t border-gray-200 pt-4">
@@ -48,7 +48,12 @@ const CartPage = () => {
                   <p className="text-sm text-gray-600 mb-6 text-center">
                     Bạn có thể nhập mã giảm giá ở trang thanh toán
                   </p>
-                  <button className="w-full bg-black text-white py-3 rounded-md hover:bg-gray-800 transition-colors duration-300">
+                  {/* <Link href="/cart"> */}
+                    <button className="w-full mt-4 bg-black text-white py-3 rounded-md border-2 border-black transition-colors duration-300 hover:bg-white hover:text-black">
+                      XEM GIỎ HÀNG
+                    </button>
+                  {/* </Link> */}
+                  <button className="w-full mt-4 bg-black text-white py-3 rounded-md border-2 border-black transition-colors duration-300 hover:bg-white hover:text-black">
                     THANH TOÁN
                   </button>
                 </div>
