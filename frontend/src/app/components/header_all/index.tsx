@@ -1,7 +1,67 @@
 "use client";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { Menu, X, ShoppingCart, Search } from "lucide-react";
+import { Menu, X, ShoppingCart, Search, ChevronLeft, ChevronRight } from "lucide-react";
+
+const carouselImages = [
+  "/images/image.png", // Đường dẫn tới ảnh đầu tiên
+  "/images/image1.png", // Đường dẫn tới ảnh thứ hai
+  "/placeholder.svg?height=500&width=1200&text=Featured+Items+1",
+  "/placeholder.svg?height=500&width=1200&text=Featured+Items+2",
+];
+
+const Carousel = () => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % carouselImages.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + carouselImages.length) % carouselImages.length);
+  };
+
+  return (
+    <div className="relative mt-[120px] overflow-hidden">
+      <div
+        className="flex transition-transform duration-700 ease-in-out"
+        style={{
+          transform: `translateX(-${currentImageIndex * 100}%)`,
+        }}
+      >
+        {carouselImages.map((src, index) => (
+          <div key={index} className="min-w-full flex-shrink-0">
+            <Image
+              src={src}
+              alt={`Featured Item ${index + 1}`}
+              width={1200}
+              height={500}
+              className="w-full h-auto object-cover"
+            />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <h2 className="text-4xl font-bold text-white">FEATURED ITEMS</h2>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <button
+        onClick={prevImage}
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-70 p-3 rounded-full hover:scale-110 transition-transform duration-300 ease-in-out"
+      >
+        <ChevronLeft className="h-6 w-6" />
+      </button>
+
+      <button
+        onClick={nextImage}
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-70 p-3 rounded-full hover:scale-110 transition-transform duration-300 ease-in-out"
+      >
+        <ChevronRight className="h-6 w-6" />
+      </button>
+    </div>
+  );
+};
 
 export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -134,12 +194,32 @@ export const Header = () => {
         </div>
       </header>
 
+      {/* Main content */}
+      <main
+        className={`transform transition-transform duration-700 ease-in-out ${
+          isSearchFormVisible || isCartVisible ? "-translate-x-1/4" : "translate-x-0"
+        }`}
+      >
+        <Carousel />
+      </main>
+
+      {/* Overlay to blur the background */}
+      {(isCartVisible || isSearchFormVisible) && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm z-40 transition-opacity duration-500 ease-in-out"
+          onClick={() => {
+            setIsSearchFormVisible(false);
+            setIsCartVisible(false);
+          }}
+        ></div>
+      )}
+
       {/* Cart Slide-in */}
       <div
         className={`fixed top-0 right-0 bottom-0 ${
-          isMobile ? "w-full max-w-xs" : "w-full max-w-md" // Thay đổi max-w-lg thành max-w-md hoặc max-w-xs để nhỏ hơn
-        } bg-white z-50 transform transition-transform transition-opacity duration-700 ease-in-out ${
-          isCartVisible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+          isMobile ? "w-full max-w-xs" : "w-full max-w-md"
+        } bg-white z-50 transform transition-transform duration-700 ease-in-out ${
+          isCartVisible ? "translate-x-0" : "translate-x-full"
         } shadow-lg`}
       >
         <div className="p-6">
@@ -177,9 +257,9 @@ export const Header = () => {
       {/* Search Slide-in */}
       <div
         className={`fixed top-0 right-0 bottom-0 ${
-          isMobile ? "w-full max-w-xs" : "w-full max-w-md" // Thay đổi max-w-lg thành max-w-md hoặc max-w-xs để nhỏ hơn
-        } bg-white z-50 transform transition-transform transition-opacity duration-700 ease-in-out ${
-          isSearchFormVisible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+          isMobile ? "w-full max-w-xs" : "w-full max-w-md"
+        } bg-white z-50 transform transition-transform duration-700 ease-in-out ${
+          isSearchFormVisible ? "translate-x-0" : "translate-x-full"
         } shadow-lg`}
       >
         <div className="p-6">
@@ -216,3 +296,5 @@ export const Header = () => {
     </>
   );
 };
+
+export default Header;
