@@ -102,18 +102,3 @@ a::before {
   transition: width 0.5s ease-in-out;
 }
 
-/* a:hover::before {
-  width: 100%;
-} */
-
-/* a::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border: 2px solid transparent;
-  transition: border-color 0.5s ease-in-out;
-}
-
-a:hover::after {
-  border-color: gray;
-} */

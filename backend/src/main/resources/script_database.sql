@@ -27,8 +27,8 @@ CREATE TABLE products (
     description TEXT,
     main_image_url VARCHAR(2083),
     size_chart_url VARCHAR(2083),
-    category ENUM('top', 'bottom', 'outerwear', 'bag', 'accessories') NOT NULL,
-    discount_percentage DECIMAL(5, 2)
+    category ENUM('top', 'bottom', 'outerwear', 'bag', 'accessories') NOT NULL
+    
 );
 
 CREATE TABLE product_variants (
@@ -39,8 +39,16 @@ CREATE TABLE product_variants (
     price DECIMAL(10, 2) NOT NULL,
     size VARCHAR(50) NOT NULL,
     quantity INT NOT NULL,
+    discount_percentage DECIMAL(5, 2)
     FOREIGN KEY (product_id) REFERENCES products(product_id)
 );
+
+ALTER TABLE product_variants
+    MODIFY COLUMN size ENUM('S', 'M', 'L', 'XL', 'FREE') NOT NULL;
+
+ALTER TABLE product_variants
+    MODIFY COLUMN color ENUM('Black', 'White', 'Gray', 'Blue', 'Red', 'Green', 'Yellow', 'Brown', 'Pink', 'Purple') NOT NULL;
+
 
 CREATE TABLE product_images (
     image_id INT AUTO_INCREMENT PRIMARY KEY,

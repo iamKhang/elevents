@@ -21,7 +21,7 @@ const Carousel = () => {
   };
 
   return (
-    <div className="relative mt-[120px] overflow-hidden">
+    <div className="relative overflow-hidden">
       {/* Container cho tất cả các hình ảnh */}
       <div
         className="flex transition-transform duration-700 ease-in-out"
