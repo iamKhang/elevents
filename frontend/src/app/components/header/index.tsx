@@ -1,14 +1,35 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X, ShoppingCart, Search } from "lucide-react";
+import CartItem from "../../cart/cartItem"; // Giữ lại import CartItem như ban đầu
 
-export const Header = () => {
+const Header = () => {
+  // Giữ nguyên toàn bộ state đã khai báo trước đó
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isSearchFormVisible, setIsSearchFormVisible] = useState(false);
   const [isCartVisible, setIsCartVisible] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [cartItems, setCartItems] = useState([
+    {
+      name: "Allyson Athlete Jersey",
+      color: "Tan / M",
+      price: "420,000đ",
+      img: "/images/allyson-athlete-jersey.jpg",
+      quantity: 1,
+    },
+    {
+      name: "Hades Profile Ellipse Cap",
+      color: "Đen",
+      price: "350,000đ",
+      img: "/images/hades-profile-ellipse-cap.jpg",
+      quantity: 1,
+    },
+  ]);
 
+  // Giữ nguyên useEffect để theo dõi sự thay đổi kích thước và cuộn trang
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -28,6 +49,7 @@ export const Header = () => {
     };
   }, []);
 
+  // Các hàm toggle để mở/đóng các thành phần
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
   const toggleSearchForm = () => {
     setIsSearchFormVisible((prev) => !prev);
@@ -38,6 +60,24 @@ export const Header = () => {
     setIsCartVisible((prev) => !prev);
     setIsSearchFormVisible(false);
     setIsMobileMenuOpen(false);
+  };
+
+  // Hàm xử lý thay đổi kết quả tìm kiếm
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+
+    if (value) {
+      setSearchResults([
+        { name: "Allyson Athlete Jersey", price: "420,000đ", img: "/images/allyson-athlete-jersey.jpg" },
+        { name: "Arbormass Hoodie", price: "720,000đ", img: "/images/arbormass-hoodie.jpg" },
+        { name: "Artifact Sweater", price: "450,000đ", img: "/images/artifact-sweater.jpg", oldPrice: "590,000đ" },
+        { name: "Alternative Tee", price: "252,000đ", img: "/images/alternative-tee.jpg", oldPrice: "420,000đ" },
+        { name: "Angel Tee", price: "190,000đ", img: "/images/angel-tee.jpg", oldPrice: "380,000đ" },
+      ]);
+    } else {
+      setSearchResults([]);
+    }
   };
 
   const menuItems = [
@@ -51,6 +91,7 @@ export const Header = () => {
     "RECRUITMENT",
   ];
 
+  // Bắt đầu phần trả về JSX
   return (
     <>
       <header
@@ -96,7 +137,6 @@ export const Header = () => {
                     className="relative text-sm font-medium hover:text-gray-700 whitespace-nowrap transition-all duration-500 ease-in-out transform hover:-translate-y-1"
                   >
                     {item}
-                    <span className="absolute inset-x-0 bottom-0 h-0.5 bg-black transform scale-x-0 transition-transform duration-500 ease-out hover:scale-x-100 origin-left"></span>
                   </Link>
                 ))}
               </nav>
@@ -133,7 +173,7 @@ export const Header = () => {
         </div>
       </header>
 
-      {/* Mobile Menu Slide-in */}
+      {/* Menu Mobile Slide-in */}
       <div
         className={`fixed top-0 left-0 bottom-0 w-full max-w-xs bg-white z-50 transform transition-transform duration-700 ease-in-out ${
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
@@ -162,6 +202,20 @@ export const Header = () => {
                 {item}
               </Link>
             ))}
+            <Link
+              href="/login"
+              className="block text-sm font-medium hover:text-gray-700 whitespace-nowrap transition-all duration-500 ease-in-out"
+              onClick={toggleMobileMenu}
+            >
+              ĐĂNG NHẬP
+            </Link>
+            <Link
+              href="/register"
+              className="block text-sm font-medium hover:text-gray-700 whitespace-nowrap transition-all duration-500 ease-in-out"
+              onClick={toggleMobileMenu}
+            >
+              ĐĂNG KÝ
+            </Link>
           </nav>
         </div>
       </div>
@@ -175,7 +229,7 @@ export const Header = () => {
         } shadow-lg`}
       >
         <div className="p-6">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold">Giỏ hàng</h2>
             <button
               onClick={toggleCart}
@@ -185,23 +239,52 @@ export const Header = () => {
               <X className="h-6 w-6" />
             </button>
           </div>
-          <div className="mt-6">
-            <p>Hiện chưa có sản phẩm</p>
-            <div className="mt-4 border-t border-gray-200 pt-4">
-              <h3 className="text-lg font-bold">TOTAL: 0đ</h3>
-              <div className="mt-4 flex space-x-4">
-                <Link href="/cart">
-                  <button className="w-full bg-black text-white font-bold py-2 px-4 rounded-none hover:bg-white hover:text-black border-none transition-colors duration-300">
-                    XEM GIỎ HÀNG
-                  </button>
-
-                </Link>
-                <Link href="/cart">
-                  <button className="w-full bg-black text-white font-bold py-2 px-4 rounded-md border border-black hover:bg-white hover:text-black transition-colors duration-300">
-                    THANH TOÁN
-                  </button>
-                </Link>
+          <div className="space-y-6">
+            {cartItems.map((item, index) => (
+              <div key={index} className="flex items-center space-x-4 border-b pb-4">
+                <div className="w-24 h-24 bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
+                  <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
+                </div>
+                <div className="flex-grow">
+                  <h3 className="text-sm font-semibold">{item.name}</h3>
+                  <p className="text-xs text-gray-500 mb-2">{item.color}</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="number"
+                        min="1"
+                        value={item.quantity}
+                        className="w-12 px-2 py-1 border border-gray-300 rounded-md text-center"
+                      />
+                    </div>
+                    <span className="text-sm font-bold text-black">{item.price}</span>
+                  </div>
+                </div>
+                <button
+                  aria-label="Remove item"
+                  className="text-gray-500 hover:text-black transition-colors duration-300"
+                >
+                  <X className="h-4 w-4" />
+                </button>
               </div>
+            ))}
+          </div>
+          <div className="mt-8 border-t border-gray-200 pt-4">
+            <div className="flex justify-between items-center mb-6">
+              <span className="text-lg font-semibold">TOTAL</span>
+              <span className="text-lg font-bold">770,000đ</span>
+            </div>
+            <div className="flex space-x-4">
+              <Link href="/cart">
+                <button className="w-full bg-black text-white font-bold py-3 px-4 rounded-md border border-black hover:bg-white hover:text-black transition-colors duration-300">
+                  XEM GIỎ HÀNG
+                </button>
+              </Link>
+              <Link href="/checkout">
+                <button className="w-full bg-black text-white font-bold py-3 px-4 rounded-md border border-black hover:bg-white hover:text-black transition-colors duration-300">
+                  THANH TOÁN
+                </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -233,19 +316,38 @@ export const Header = () => {
                 id="search"
                 className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                 placeholder="Tìm kiếm sản phẩm..."
+                value={searchQuery}
+                onChange={handleSearchInputChange}
               />
             </div>
-            <div>
-              <button
-                type="submit"
-                className="w-full bg-black text-white font-bold py-2 px-4 rounded-md hover:bg-gray-800 transition-colors duration-300"
-              >
-                Tìm kiếm
-              </button>
-            </div>
           </form>
+          {searchResults.length > 0 && (
+            <div className="mt-6 space-y-4 divide-y divide-gray-200">
+              {searchResults.map((result, index) => (
+                <div key={index} className="flex items-center justify-between space-x-4 py-4">
+                  <div className="flex-grow">
+                    <h3 className="text-sm font-medium">{result.name}</h3>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm font-bold text-black">{result.price}</span>
+                      {result.oldPrice && (
+                        <span className="text-xs line-through text-gray-500">{result.oldPrice}</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="w-16 h-16 bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
+                    <img src={result.img} alt={result.name} className="w-full h-full object-cover" />
+                  </div>
+                </div>
+              ))}
+              <div className="text-center text-sm font-medium text-blue-600 cursor-pointer hover:underline">
+                Xem thêm 14 sản phẩm
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>
   );
 };
+
+export default Header;

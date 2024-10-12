@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Menu, X, ShoppingCart, Search } from 'lucide-react'
-import  {Header}  from "../components/header";
+import  Header  from "../components/header";
 
 const Register = () => {
   // Form states

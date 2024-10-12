@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import  { Header }  from '../components/header'; // Đảm bảo đường dẫn này đúng với cấu trúc của bạn
+import   Header   from '../components/header'; // Đảm bảo đường dẫn này đúng với cấu trúc của bạn
 
 
 const Login = () => {
