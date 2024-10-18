@@ -69,12 +69,13 @@ const Footer: React.FC = () => {
                 </Accordion.Trigger>
               </Accordion.Header>
               <Accordion.Content
-                className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                className={`overflow-y-auto transition-all duration-500 ease-in-out ${
                   openItems.includes(index)
-                    ? 'max-h-40 opacity-100 translate-y-0'
-                    : 'max-h-0 opacity-0 translate-y-[-20px]' // Điều chỉnh hiệu ứng dịch chuyển
+                    ? 'max-h-[300px] opacity-100 translate-y-0'  // Điều chỉnh chiều cao tối đa ở đây
+                    : 'max-h-0 opacity-0 translate-y-0'
                 }`}
               >
+
                 <ul className="list-none p-0">
                   {section.items.map((item, i) => (
                     <li
@@ -111,8 +112,8 @@ const Footer: React.FC = () => {
             <Accordion.Content
               className={`overflow-hidden transition-all duration-500 ease-in-out ${
                 openItems.includes('follow-us')
-                  ? 'max-h-40 opacity-100 translate-y-0'
-                  : 'max-h-0 opacity-0 translate-y-[-20px]'
+                  ? 'max-h-auto opacity-100 translate-y-0'
+                  : 'max-h-0 opacity-0 translate-y-0'
               }`}
             >
               <div className="flex space-x-4 pt-2">

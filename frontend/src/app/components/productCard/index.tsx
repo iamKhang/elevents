@@ -40,13 +40,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ image1, image2, name, price, 
         >
           <button
             onClick={(e) => { e.preventDefault(); window.location.href = productLink }}
-            className="bg-black text-white py-1 px-2 flex-1 mx-1 text-center"
+            className="bg-black text-white py-1 px-2 flex-1 mx-1 text-center text-sm md:text-base" // Thay đổi kích thước chữ
           >
             MUA NGAY
           </button>
           <button
             onClick={(e) => { e.preventDefault(); alert('Thêm vào giỏ hàng!') }}
-            className="bg-black text-white py-1 px-2 flex-1 mx-1 text-center"
+            className="bg-black text-white py-1 px-2 flex-1 mx-1 text-center text-sm md:text-base" // Thay đổi kích thước chữ
           >
             THÊM VÀO GIỎ
           </button>
