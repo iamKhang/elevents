@@ -1,129 +1,56 @@
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS products;
-DROP TABLE IF EXISTS product_variants;
-DROP TABLE IF EXISTS product_images;
-DROP TABLE IF EXISTS carts;
-DROP TABLE IF EXISTS cart_items;
-DROP TABLE IF EXISTS orders;
-DROP TABLE IF EXISTS order_details;
-DROP TABLE IF EXISTS collections;
-DROP TABLE IF EXISTS collection_images;
-DROP TABLE IF EXISTS product_collections;
-DROP TABLE IF EXISTS discount_codes;
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               11.4.3-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win64
+-- HeidiSQL Version:             12.6.0.6765
+-- --------------------------------------------------------
 
-CREATE TABLE users (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
-    full_name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    gender ENUM('male', 'female', 'other') NOT NULL,
-    date_of_birth DATE,
-    password VARCHAR(255) NOT NULL,
-    role ENUM('user', 'admin') NOT NULL
-);
-
-CREATE TABLE products (
-    product_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    main_image_url VARCHAR(2083),
-    size_chart_url VARCHAR(2083),
-    category ENUM('top', 'bottom', 'outerwear', 'bag', 'accessories') NOT NULL
-    
-);
-
-CREATE TABLE product_variants (
-    variant_id INT AUTO_INCREMENT PRIMARY KEY,
-    product_id INT,
-    sku VARCHAR(255) UNIQUE NOT NULL,
-    color VARCHAR(50) NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
-    size VARCHAR(50) NOT NULL,
-    quantity INT NOT NULL,
-    discount_percentage DECIMAL(5, 2)
-    FOREIGN KEY (product_id) REFERENCES products(product_id)
-);
-
-ALTER TABLE product_variants
-    MODIFY COLUMN size ENUM('S', 'M', 'L', 'XL', 'FREE') NOT NULL;
-
-ALTER TABLE product_variants
-    MODIFY COLUMN color ENUM('Black', 'White', 'Gray', 'Blue', 'Red', 'Green', 'Yellow', 'Brown', 'Pink', 'Purple') NOT NULL;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
-CREATE TABLE product_images (
-    image_id INT AUTO_INCREMENT PRIMARY KEY,
-    product_variant_id INT,
-    image_url VARCHAR(2083) NOT NULL,
-    FOREIGN KEY (product_variant_id) REFERENCES product_variants(variant_id)
-);
+-- Dumping database structure for price_db
+DROP DATABASE IF EXISTS `price_db`;
+CREATE DATABASE IF NOT EXISTS `price_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
+USE `price_db`;
 
-CREATE TABLE carts (
-    cart_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
-);
+-- Dumping structure for table price_db.product
+DROP TABLE IF EXISTS `product`;
+CREATE TABLE IF NOT EXISTS `product` (
+  `product_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(250) NOT NULL,
+  `description` varchar(250) DEFAULT NULL,
+  `img_path` varchar(250) DEFAULT NULL,
+  PRIMARY KEY (`product_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE cart_items (
-    cart_item_id INT AUTO_INCREMENT PRIMARY KEY,
-    cart_id INT,
-    product_variant_id INT,
-    quantity INT NOT NULL,
-    FOREIGN KEY (cart_id) REFERENCES carts(cart_id),
-    FOREIGN KEY (product_variant_id) REFERENCES product_variants(variant_id)
-);
+-- Data exporting was unselected.
 
-CREATE TABLE discount_codes (
-    discount_id INT AUTO_INCREMENT PRIMARY KEY,
-    code VARCHAR(50) UNIQUE NOT NULL,
-    discount_type ENUM('percentage', 'fixed') NOT NULL,
-    discount_value DECIMAL(10, 2) NOT NULL,
-    min_order_value DECIMAL(10, 2),
-    max_discount_value DECIMAL(10, 2),
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL
-);
+-- Dumping structure for table price_db.product_price
+DROP TABLE IF EXISTS `product_price`;
+CREATE TABLE IF NOT EXISTS `product_price` (
+  `price_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `product_id` bigint(20) NOT NULL,
+  `value` double NOT NULL,
+  `apply_date` datetime NOT NULL DEFAULjob_dbT current_timestamp(),
+  `note` varchar(250) DEFAULT NULL,
+  `state` tinyint(4) NOT NULL DEFAULT 0 COMMENT 'trang thai',
+  PRIMARY KEY (`price_id`),
+  KEY `FK_product_price_product` (`product_id`),
+  CONSTRAINT `FK_product_prproductice_product` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE orders (
-    discount_id INT,
-    shipping_fee DECIMAL(10, 2) NOT NULL,
-    order_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    phone_number VARCHAR(20) NOT NULL,
-    shipping_address TEXT NOT NULL,
-    order_date DATETIME NOT NULL,
-    total_amount DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (discount_id) REFERENCES discount_codes(discount_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
-);
+-- Data exporting was unselected.
 
-CREATE TABLE order_details (
-    order_detail_id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT,
-    product_variant_id INT,
-    quantity INT NOT NULL,
-    price_at_order_time DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES orders(order_id),
-    FOREIGN KEY (product_variant_id) REFERENCES product_variants(variant_id)
-);
-
-CREATE TABLE collections (
-    collection_id INT AUTO_INCREMENT PRIMARY KEY,
-    collection_name VARCHAR(255) NOT NULL,
-    description TEXT
-);
-
-CREATE TABLE collection_images (
-    image_id INT AUTO_INCREMENT PRIMARY KEY,
-    collection_id INT,
-    image_url VARCHAR(2083) NOT NULL,
-    FOREIGN KEY (collection_id) REFERENCES collections(collection_id)
-);
-
-CREATE TABLE product_collections (
-    product_id INT,
-    collection_id INT,
-    PRIMARY KEY (product_id, collection_id),
-    FOREIGN KEY (product_id) REFERENCES products(product_id),
-    FOREIGN KEY (collection_id) REFERENCES collections(collection_id)
-);
-
+/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+price_db
