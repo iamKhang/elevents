@@ -102,3 +102,25 @@ a::before {
   transition: width 0.5s ease-in-out;
 }
 
+
+.marquee-banner-container {
+  background-color: #fff; 
+  padding: 10px 0; 
+  overflow: hidden; 
+}
+
+.marquee-text {
+  font-size: 3rem; 
+  font-weight: 400; 
+  text-transform: uppercase; 
+  letter-spacing: 0.15em; 
+  color: transparent; 
+  -webkit-text-stroke: 1px #000; 
+  line-height: 1.2; 
+  white-space: nowrap; 
+}
+
+.marquee-gap {
+  margin-right: 50px;
+}
+

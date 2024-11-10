@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Menu, X, ShoppingCart, Search } from "lucide-react";
-import CartItem from "../../cart/cartItem"; // Giữ lại import CartItem như ban đầu
+import CartItem from "../../cartitem/cartItem";
+import SearchItem from "../../search/searchItem";
 
 const Header = () => {
-  // Giữ nguyên toàn bộ state đã khai báo trước đó
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isSearchFormVisible, setIsSearchFormVisible] = useState(false);
@@ -17,19 +17,21 @@ const Header = () => {
       name: "Allyson Athlete Jersey",
       color: "Tan / M",
       price: "420,000đ",
-      img: "/images/allyson-athlete-jersey.jpg",
+      img: "https://product.hstatic.net/1000306633/product/hades1575_837fd4f89fab4872b80194e1ca98dcd8.jpg",
       quantity: 1,
     },
     {
       name: "Hades Profile Ellipse Cap",
       color: "Đen",
       price: "350,000đ",
-      img: "/images/hades-profile-ellipse-cap.jpg",
+      img: "https://product.hstatic.net/1000306633/product/hades1575_837fd4f89fab4872b80194e1ca98dcd8.jpg",
       quantity: 1,
     },
   ]);
 
-  // Giữ nguyên useEffect để theo dõi sự thay đổi kích thước và cuộn trang
+  const searchRef = useRef(null);
+  const cartRef = useRef(null);
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -49,7 +51,32 @@ const Header = () => {
     };
   }, []);
 
-  // Các hàm toggle để mở/đóng các thành phần
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target) &&
+        isSearchFormVisible
+      ) {
+        setIsSearchFormVisible(false);
+      }
+
+      if (
+        cartRef.current &&
+        !cartRef.current.contains(event.target) &&
+        isCartVisible
+      ) {
+        setIsCartVisible(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isSearchFormVisible, isCartVisible]);
+
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
   const toggleSearchForm = () => {
     setIsSearchFormVisible((prev) => !prev);
@@ -62,18 +89,42 @@ const Header = () => {
     setIsMobileMenuOpen(false);
   };
 
-  // Hàm xử lý thay đổi kết quả tìm kiếm
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchQuery(value);
 
     if (value) {
       setSearchResults([
-        { name: "Allyson Athlete Jersey", price: "420,000đ", img: "/images/allyson-athlete-jersey.jpg" },
-        { name: "Arbormass Hoodie", price: "720,000đ", img: "/images/arbormass-hoodie.jpg" },
-        { name: "Artifact Sweater", price: "450,000đ", img: "/images/artifact-sweater.jpg", oldPrice: "590,000đ" },
-        { name: "Alternative Tee", price: "252,000đ", img: "/images/alternative-tee.jpg", oldPrice: "420,000đ" },
-        { name: "Angel Tee", price: "190,000đ", img: "/images/angel-tee.jpg", oldPrice: "380,000đ" },
+        {
+          name: "Allyson Athlete Jersey",
+          price: "420,000đ",
+          img: "https://product.hstatic.net/1000306633/product/hades1575_837fd4f89fab4872b80194e1ca98dcd8.jpg",
+        },
+        {
+          name: "Arbormass Hoodie",
+          price: "720,000đ",
+          img: "https://product.hstatic.net/1000306633/product/hades1575_837fd4f89fab4872b80194e1ca98dcd8.jpg",
+        },
+        {
+          name: "Artifact Sweater",
+          price: "450,000đ",
+          img: "https://product.hstatic.net/1000306633/product/hades1575_837fd4f89fab4872b80194e1ca98dcd8.jpg",
+          oldPrice: "590,000đ",
+        },
+        {
+          name: "Alternative Tee",
+          price: "252,000đ",
+          img: "https://product.hstatic.net/1000306633/product/hades1575_837fd4f89fab4872b80194e1ca98dcd8.jpg",
+          oldPrice: "420,000đ",
+        },
+        {
+          name: "Angel Tee",
+          price: "190,000đ",
+          img: "https://product.hstatic.net/1000306633/product/hades1575_837fd4f89fab4872b80194e1ca98dcd8.jpg",
+          oldPrice: "380,000đ",
+        },
       ]);
     } else {
       setSearchResults([]);
@@ -81,27 +132,29 @@ const Header = () => {
   };
 
   const menuItems = [
-    "SHOP ALL",
-    "TOPS",
-    "BOTTOMS",
-    "OUTERWEAR",
-    "BAGS",
-    "ACCESSORIES",
-    "SALE",
-    "RECRUITMENT",
+    { name: "SHOP ALL", path: "/" },
+    { name: "TOPS", path: "/listProduct/tops" },
+    { name: "BOTTOMS", path: "/listProduct/bottoms" },
+    { name: "OUTERWEAR", path: "/listProduct/outerwear" },
+    { name: "BAGS", path: "/listProduct/bags" },
+    { name: "ACCESSORIES", path: "/listProduct/accessories" },
+    { name: "SALE", path: "/listProduct/sale" },
   ];
 
   // Bắt đầu phần trả về JSX
   return (
     <>
       <header
-        className={`fixed w-full top-0 left-0 z-50 bg-white shadow-md transition-transform duration-500 ease-out ${
-          isScrolled ? "transform -translate-y-2 shadow-lg" : "transform translate-y-0"
-        } ${(isCartVisible || isSearchFormVisible) ? "filter blur-sm" : ""}`}
+        className={`fixed w-full top-0 left-0 z-50 transition-all duration-500 ease-in-out ${
+          isScrolled
+            ? "bg-white shadow-xl transform translate-y-0 backdrop-blur-md"
+            : "bg-transparent shadow-none transform -translate-y-0"
+        } ${isCartVisible || isSearchFormVisible ? "filter blur-sm" : ""}`}
       >
         <div className="bg-black text-white overflow-hidden whitespace-nowrap">
           <div className="inline-block animate-marquee">
-            ELEVENTS™ 2024 GET TO KNOW ABOUT OUR VIBE ELEVENTS™ 2024 GET TO KNOW ABOUT OUR VIBE ELEVENTS™ 2024 GET TO KNOW ABOUT OUR VIBE
+            ELEVENTS™ 2024 GET TO KNOW ABOUT OUR VIBE ELEVENTS™ 2024 GET TO KNOW
+            ABOUT OUR VIBE ELEVENTS™ 2024 GET TO KNOW ABOUT OUR VIBE
           </div>
         </div>
 
@@ -122,21 +175,21 @@ const Header = () => {
           )}
 
           <div className="flex items-center space-x-6 flex-grow">
-            <Link
-              href="/"
-              className="text-xl font-bold flex-shrink-0 hover:text-gray-700 transition-colors duration-300"
-            >
-              Elevents
+            <Link href="/" passHref legacyBehavior>
+              <a className="text-xl font-bold flex-shrink-0 hover:text-gray-700">
+                Elevents
+              </a>
             </Link>
+
             {!isMobile && (
               <nav className="flex items-center space-x-4">
                 {menuItems.map((item, index) => (
                   <Link
                     key={index}
-                    href={`/${item.toLowerCase().replace(" ", "-")}`}
-                    className="relative text-sm font-medium hover:text-gray-700 whitespace-nowrap transition-all duration-500 ease-in-out transform hover:-translate-y-1"
+                    href={item.path} // Sử dụng thuộc tính path được định nghĩa trước đó
+                    className="block text-sm font-medium hover:text-gray-700 whitespace-nowrap transition-transform duration-500 ease-in-out transform hover:-translate-y-1"
                   >
-                    {item}
+                    {item.name}
                   </Link>
                 ))}
               </nav>
@@ -146,12 +199,12 @@ const Header = () => {
             {!isMobile && (
               <>
                 <Link href="/login">
-                  <button className="text-sm font-medium hover:text-gray-700 whitespace-nowrap transition-colors duration-300">
+                  <button className="text-sm font-medium hover:text-gray-700 transition-transform transform hover:-translate-y-1 duration-300 ease-in-out">
                     ĐĂNG NHẬP
                   </button>
                 </Link>
                 <Link href="/register">
-                  <button className="text-sm font-medium hover:text-gray-700 whitespace-nowrap transition-colors duration-300">
+                  <button className="text-sm font-medium hover:text-gray-700 transition-transform transform hover:-translate-y-1 duration-300 ease-in-out">
                     ĐĂNG KÝ
                   </button>
                 </Link>
@@ -159,19 +212,27 @@ const Header = () => {
             )}
             <button
               onClick={toggleSearchForm}
-              className="hover:text-gray-700 transition-transform transform duration-300 ease-in-out hover:scale-110"
+              className="hover:text-gray-700 transition-transform transform duration-300 ease-in-out hover:-translate-y-1"
             >
               <Search className="h-5 w-5" />
             </button>
             <button
               onClick={toggleCart}
-              className="hover:text-gray-700 transition-transform transform duration-300 ease-in-out hover:scale-110"
+              className="hover:text-gray-700 transition-transform transform duration-300 ease-in-out hover:-translate-y-1"
             >
               <ShoppingCart className="h-5 w-5" />
             </button>
           </div>
         </div>
       </header>
+
+      {/* Overlay to close menu by clicking outside */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black opacity-30 z-40"
+          onClick={closeMobileMenu}
+        ></div>
+      )}
 
       {/* Menu Mobile Slide-in */}
       <div
@@ -195,156 +256,65 @@ const Header = () => {
             {menuItems.map((item, index) => (
               <Link
                 key={index}
-                href={`/${item.toLowerCase().replace(" ", "-")}`}
+                href={item.path} // Sử dụng thuộc tính path được định nghĩa trước đó
                 className="block text-sm font-medium hover:text-gray-700 whitespace-nowrap transition-all duration-500 ease-in-out"
                 onClick={toggleMobileMenu}
               >
-                {item}
+                {item.name}
               </Link>
             ))}
-            <Link
-              href="/login"
-              className="block text-sm font-medium hover:text-gray-700 whitespace-nowrap transition-all duration-500 ease-in-out"
-              onClick={toggleMobileMenu}
-            >
-              ĐĂNG NHẬP
-            </Link>
-            <Link
-              href="/register"
-              className="block text-sm font-medium hover:text-gray-700 whitespace-nowrap transition-all duration-500 ease-in-out"
-              onClick={toggleMobileMenu}
-            >
-              ĐĂNG KÝ
-            </Link>
+
+            {/* Divider Line */}
+            <hr className="border-t border-gray-300 my-4" />
+
+            <div className="flex items-center space-x-1 text-sm font-medium">
+              <Link
+                href="/login"
+                className="hover:text-gray-700 whitespace-nowrap transition-all duration-500 ease-in-out"
+                onClick={toggleMobileMenu}
+              >
+                ĐĂNG NHẬP
+              </Link>
+              <span>/</span>
+              <Link
+                href="/register"
+                className="hover:text-gray-700 whitespace-nowrap transition-all duration-500 ease-in-out"
+                onClick={toggleMobileMenu}
+              >
+                ĐĂNG KÝ
+              </Link>
+            </div>
           </nav>
         </div>
       </div>
 
-      {/* Cart Slide-in */}
+      {/* Cart Slide-in with Smooth Animation */}
       <div
+        ref={cartRef}
         className={`fixed top-0 right-0 bottom-0 ${
           isMobile ? "w-full max-w-xs" : "w-full max-w-md"
         } bg-white z-50 transform transition-transform duration-700 ease-in-out ${
           isCartVisible ? "translate-x-0" : "translate-x-full"
         } shadow-lg`}
       >
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold">Giỏ hàng</h2>
-            <button
-              onClick={toggleCart}
-              aria-label="Close cart"
-              className="hover:text-gray-700 transition-transform transform hover:scale-110 ease-in-out duration-300"
-            >
-              <X className="h-6 w-6" />
-            </button>
-          </div>
-          <div className="space-y-6">
-            {cartItems.map((item, index) => (
-              <div key={index} className="flex items-center space-x-4 border-b pb-4">
-                <div className="w-24 h-24 bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
-                  <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
-                </div>
-                <div className="flex-grow">
-                  <h3 className="text-sm font-semibold">{item.name}</h3>
-                  <p className="text-xs text-gray-500 mb-2">{item.color}</p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="number"
-                        min="1"
-                        value={item.quantity}
-                        className="w-12 px-2 py-1 border border-gray-300 rounded-md text-center"
-                      />
-                    </div>
-                    <span className="text-sm font-bold text-black">{item.price}</span>
-                  </div>
-                </div>
-                <button
-                  aria-label="Remove item"
-                  className="text-gray-500 hover:text-black transition-colors duration-300"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-            ))}
-          </div>
-          <div className="mt-8 border-t border-gray-200 pt-4">
-            <div className="flex justify-between items-center mb-6">
-              <span className="text-lg font-semibold">TOTAL</span>
-              <span className="text-lg font-bold">770,000đ</span>
-            </div>
-            <div className="flex space-x-4">
-              <Link href="/cart">
-                <button className="w-full bg-black text-white font-bold py-3 px-4 rounded-md border border-black hover:bg-white hover:text-black transition-colors duration-300">
-                  XEM GIỎ HÀNG
-                </button>
-              </Link>
-              <Link href="/checkout">
-                <button className="w-full bg-black text-white font-bold py-3 px-4 rounded-md border border-black hover:bg-white hover:text-black transition-colors duration-300">
-                  THANH TOÁN
-                </button>
-              </Link>
-            </div>
-          </div>
-        </div>
+        {isCartVisible && (
+          <CartItem
+            cartItems={cartItems}
+            toggleCart={toggleCart}
+            isMobile={isMobile}
+          />
+        )}
       </div>
 
       {/* Search Slide-in */}
-      <div
-        className={`fixed top-0 right-0 bottom-0 ${
-          isMobile ? "w-full max-w-xs" : "w-full max-w-md"
-        } bg-white z-50 transform transition-transform duration-700 ease-in-out ${
-          isSearchFormVisible ? "translate-x-0" : "translate-x-full"
-        } shadow-lg`}
-      >
-        <div className="p-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold">Tìm kiếm</h2>
-            <button
-              onClick={toggleSearchForm}
-              aria-label="Close search form"
-              className="hover:text-gray-700 transition-transform transform hover:scale-110 ease-in-out duration-300"
-            >
-              <X className="h-6 w-6" />
-            </button>
-          </div>
-          <form className="mt-6 space-y-4">
-            <div>
-              <input
-                type="text"
-                id="search"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                placeholder="Tìm kiếm sản phẩm..."
-                value={searchQuery}
-                onChange={handleSearchInputChange}
-              />
-            </div>
-          </form>
-          {searchResults.length > 0 && (
-            <div className="mt-6 space-y-4 divide-y divide-gray-200">
-              {searchResults.map((result, index) => (
-                <div key={index} className="flex items-center justify-between space-x-4 py-4">
-                  <div className="flex-grow">
-                    <h3 className="text-sm font-medium">{result.name}</h3>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm font-bold text-black">{result.price}</span>
-                      {result.oldPrice && (
-                        <span className="text-xs line-through text-gray-500">{result.oldPrice}</span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="w-16 h-16 bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
-                    <img src={result.img} alt={result.name} className="w-full h-full object-cover" />
-                  </div>
-                </div>
-              ))}
-              <div className="text-center text-sm font-medium text-blue-600 cursor-pointer hover:underline">
-                Xem thêm 14 sản phẩm
-              </div>
-            </div>
-          )}
-        </div>
+      <div ref={searchRef}>
+        <SearchItem
+          isSearchFormVisible={isSearchFormVisible}
+          toggleSearchForm={toggleSearchForm}
+          searchQuery={searchQuery}
+          handleSearchInputChange={handleSearchInputChange}
+          searchResults={searchResults}
+        />
       </div>
     </>
   );

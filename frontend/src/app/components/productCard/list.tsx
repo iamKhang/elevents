@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import ProductCard from './index';
-import { Listbox } from '@headlessui/react';
+import React, { useState } from "react";
+import ProductCard from "./index";
+
 
 type Product = {
   image1: string;
@@ -35,37 +35,41 @@ const ProductList: React.FC = () => {
   // }, []);
   const products = [
     {
-      image1: 'https://product.hstatic.net/1000306633/product/hades1575_837fd4f89fab4872b80194e1ca98dcd8.jpg',
-      image2: 'https://product.hstatic.net/1000306633/product/7.1_2c4589be2e5c484f992de0f611797a29.jpg',
-      name: 'HADES FRAYED EDGE SHORTS',
-      price: '480,000',
-      colors: ['#ccc'],
-      link : ''
+      image1:
+        "https://product.hstatic.net/1000306633/product/hades1575_837fd4f89fab4872b80194e1ca98dcd8.jpg",
+      image2:
+        "https://product.hstatic.net/1000306633/product/7.1_2c4589be2e5c484f992de0f611797a29.jpg",
+      name: "HADES FRAYED EDGE SHORTS",
+      price: "480,000",
+      colors: ["#ccc"],
     },
     {
-      image1: 'https://product.hstatic.net/1000306633/product/hades1575_837fd4f89fab4872b80194e1ca98dcd8.jpg',
-      image2: 'https://product.hstatic.net/1000306633/product/hades0072_638e374330534a9ba1d4bf33d8b6599f_large.jpg',
-      name: 'HADES STRIPED SOLID SHIRT',
-      price: '480,000',
-      colors: ['green', 'pink'],
-      link: ''
+      image1:
+        "https://product.hstatic.net/1000306633/product/hades1575_837fd4f89fab4872b80194e1ca98dcd8.jpg",
+      image2:
+        "https://product.hstatic.net/1000306633/product/7.1_2c4589be2e5c484f992de0f611797a29.jpg",
+      name: "HADES STRIPED SOLID SHIRT",
+      price: "480,000",
+      colors: ["green", "pink"],
     },
     {
-      image1: 'https://product.hstatic.net/1000306633/product/hades1575_837fd4f89fab4872b80194e1ca98dcd8.jpg',
-      image2: 'https://product.hstatic.net/1000306633/product/7.1_2c4589be2e5c484f992de0f611797a29.jpg',
-      name: 'HADES LOVELESS STRIPED SHIRT',
-      price: '520,000',
-      colors: ['#ccc'],
-      link: ''
+      image1:
+        "https://product.hstatic.net/1000306633/product/hades1575_837fd4f89fab4872b80194e1ca98dcd8.jpg",
+      image2:
+        "https://product.hstatic.net/1000306633/product/7.1_2c4589be2e5c484f992de0f611797a29.jpg",
+      name: "HADES LOVELESS STRIPED SHIRT",
+      price: "520,000",
+      colors: ["#ccc"],
     },
     {
-      image1: 'https://product.hstatic.net/1000306633/product/hades1575_837fd4f89fab4872b80194e1ca98dcd8.jpg',
-      image2: 'https://product.hstatic.net/1000306633/product/7.1_2c4589be2e5c484f992de0f611797a29.jpg',
-      name: 'HADES STANDARD STRIPE SHORTS',
-      price: '380,000',
-      colors: ['green', 'pink'],
-      link: ''
-    }
+      image1:
+        "https://product.hstatic.net/1000306633/product/hades1575_837fd4f89fab4872b80194e1ca98dcd8.jpg",
+      image2:
+        "https://product.hstatic.net/1000306633/product/7.1_2c4589be2e5c484f992de0f611797a29.jpg",
+      name: "HADES STANDARD STRIPE SHORTS",
+      price: "380,000",
+      colors: ["green", "pink"],
+    },
   ];
 
   const sortProducts = (products: Product[], criteria: string): Product[] => {
@@ -88,46 +92,22 @@ const ProductList: React.FC = () => {
   };
 
   return (
-    <div className="relative">
-  <div className="absolute right-20 top-0 z-10">
-    <Listbox value={selectedSort} onChange={setSelectedSort}>
-      {/* Set a fixed width for the button */}
-      <Listbox.Button className="border p-2 mb-4 w-48">
-        {sortingOptions.find((option) => option.value === selectedSort)?.name}
-      </Listbox.Button>
-      {/* Set the same fixed width for the options */}
-      <Listbox.Options className="absolute border p-2 bg-white shadow-lg mt-1 w-48">
-        {sortingOptions.map((option) => (
-          <Listbox.Option
-            key={option.value}
-            value={option.value}
-            className={({ active }) => `cursor-pointer p-2 ${active ? 'bg-blue-100' : 'bg-white'}`}
-          >
-            {option.name}
-          </Listbox.Option>
-        ))}
-      </Listbox.Options>
-    </Listbox>
-  </div>
-
-  <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-16">
-    {sortProducts(products, selectedSort).map((product, index) => (
-      <div key={index} className="w-full">
-        <ProductCard
-          image1={product.image1}
-          image2={product.image2}
-          name={product.name}
-          price={parseFloat(product.price)
-            .toFixed(3)
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 
-          colors={product.colors}
-          productLink={product.link}
-        />
-      </div>
-    ))}
-  </div>
-</div>
-
+    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {products.map((product, index) => (
+        <div key={index} className="w-full">
+          {" "}
+          {/* Đảm bảo sản phẩm chiếm toàn bộ chiều rộng có sẵn */}
+          <ProductCard
+            image1={product.image1}
+            image2={product.image2}
+            name={product.name}
+            price={product.price}
+            colors={product.colors}
+            productLink={""}
+          />
+        </div>
+      ))}
+    </div>
   );
 };
 
